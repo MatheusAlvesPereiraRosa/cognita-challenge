@@ -1,0 +1,47 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+    .w-container {
+        max-width: 47rem;
+    }
+
+    .w-modal {
+        max-width: 100%;
+        width: 30rem;
+    }
+
+    .rounded-modal {
+        border-radius: 1.5rem;
+    }
+
+    .bg-btn {
+        background-color: #7357FF;
+    }
+
+    .color-btn-2 {
+        color: #7357FF;
+    }
+
+    .bg-btn:hover {
+        background-color: #533dc2;
+    }
+
+    .input-focus {
+        @apply border-2 border-gray-100 rounded-md;
+    }
+}
+
+.input-focus:focus-visible {
+    border-color: rgb(156 163 175);
+    outline: none;
+}
+
+@layer base {
+    body {
+        @apply bg-slate-100;
+        position: relative;
+        /*min-height: 100vh;*/
+    }
+}
