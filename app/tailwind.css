@@ -5,6 +5,7 @@
 @layer utilities {
     .w-container {
         max-width: 47rem;
+        width: 100%;
     }
 
     .w-modal {
