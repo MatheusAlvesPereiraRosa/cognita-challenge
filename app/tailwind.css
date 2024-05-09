@@ -17,6 +17,13 @@
         border-radius: 1.5rem;
     }
 
+    .alert {
+        top: -0.5rem;
+        right: 0.5rem;
+        max-width: 16rem;
+        z-index: 9999;
+    }
+
     .bg-btn {
         background-color: #7357FF;
     }

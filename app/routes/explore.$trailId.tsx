@@ -1,7 +1,7 @@
 import type { LoaderFunction } from "@remix-run/node";
 
 import { redirect, useActionData } from "@remix-run/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ActionFunctionArgs } from "@remix-run/node";
 
 import { json } from "@remix-run/node";
@@ -11,7 +11,8 @@ import Modal from "~/components/Modal";
 import { useLoaderData, useParams } from "@remix-run/react";
 import { StepList } from "~/components/StepList";
 
-import { Step, Trail } from "~/interfaces";
+import { ActionData, Step, Trail } from "~/interfaces";
+import { Alert } from "~/components/Alert.tsx";
 
 export const loader: LoaderFunction = async ({ params }) => {
     const { trailId } = params
@@ -27,13 +28,13 @@ export const loader: LoaderFunction = async ({ params }) => {
         const steps = await getSteps(trailId)
 
         if (trail === null || !trail || trail.length === 0) {
-            return redirect("")
+            return redirect("/")
         }
 
         return json({ steps, trail });
     } catch (error: any) {
         console.error('Error retrieving steps from database:', error.message);
-        return json({ error: 'An error occurred while retrieving steps from the database.' }, 500); // Return an error response
+        return json({ error: 'An error occurred while retrieving steps from the database.' }, 500);
     }
 }
 
@@ -63,7 +64,7 @@ export async function action({
         }
 
         if (Object.keys(errors).length) {
-            return json({ errors })
+            return json({ errors, type: "error", message: "Faltam informações!" })
         }
 
         const step = await createStep({
@@ -73,18 +74,20 @@ export async function action({
             content: content
         })
 
-        console.log(step)
+        return json({type: "success", message: "Passo criado com sucesso!"})
     } catch (error: any) {
         console.log(error)
+        return json({type: "error", message: `Erro: ${error}`})
     }
-
-    return null
 }
 
 export default function Steps() {
+    /* States for the Alert and Modal form */
     const [isOpen, setIsOpen] = useState<boolean>(false)
+    const [isShowing, setIsShowing] = useState<boolean>(false)
 
-    const actionData = useActionData<typeof action>()
+    /* Request treatment variables and data */
+    const actionData = useActionData<ActionData>()
 
     console.log(actionData)
 
@@ -92,9 +95,31 @@ export default function Steps() {
     const titleError = actionData?.errors?.title
     const contentError = actionData?.errors?.content
 
+    const type = actionData?.type
+    const message = actionData?.message
+
+    /* Trail ID from the URL parameters */
     const { trailId } = useParams()
 
+    /* Data returned from the database to be listed */
     const { steps, trail }: {steps: Step[], trail: Trail} = useLoaderData()
+
+    useEffect(() => {
+        if (actionData?.errors) {
+            showAlert()
+        } else if (actionData?.message) {
+            showAlert() 
+        }
+    }, [actionData]);
+
+    /* Alert and Modal functions */
+    const showAlert = () => {
+        setIsShowing(true)
+
+        setTimeout(() => {
+            setIsShowing(false)
+        }, 6000)
+    }
 
     const openModal = () => {
         setIsOpen(true);
@@ -106,6 +131,7 @@ export default function Steps() {
 
     return (
         <>
+            <Alert type={type} message={message} isShowing={isShowing} />
             <div className="flex flex-col flex-wrap items-center justify-center my-16 mx-8">
                 <div className="w-container">
                     <div className="flex justify-between items-center ">

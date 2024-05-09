@@ -17,4 +17,16 @@ interface StepForm {
     trailId: string;
 }
 
-export type { Trail, Step, StepForm }
+interface ActionErrors {
+    id?: string;
+    title?: string;
+    content?: string;
+}
+
+interface ActionData {
+    errors?: ActionErrors;
+    type?: "error" | "success";
+    message?: string;
+}
+
+export type { Trail, Step, StepForm, ActionData }
