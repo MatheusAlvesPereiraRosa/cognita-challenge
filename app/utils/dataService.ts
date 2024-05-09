@@ -1,8 +1,9 @@
+import { redirect } from '@remix-run/react';
 import { driver } from './neo4'; // Import the database connection
-import { Step } from '~/interfaces';
+import { Step, StepForm } from '~/interfaces';
 
 /** Function to create steps on a given Trail */
-export async function createStep(id: string, title: string, content: string, trailId: string): Promise<void> {
+export async function createStep({id, title, content, trailId}: StepForm): Promise<void> {
     const session = driver.session();
     try {
         await session.run(
@@ -26,7 +27,7 @@ export async function getOneTrail(trailId: string) {
         );
 
         if (result.records.length === 0) {
-            throw new Error(`Trail with ID ${trailId} not found.`);
+            return redirect("/") //Fazer tratamento de
         }
 
         const trail = result.records[0].get('t').properties;

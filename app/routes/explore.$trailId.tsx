@@ -1,11 +1,12 @@
 import type { LoaderFunction, MetaFunction } from "@remix-run/node";
 import { useState } from "react";
+import { ActionFunctionArgs } from "@remix-run/node";
 
 import { json } from "@remix-run/node";
-import { getSteps, getOneTrail } from "~/utils/dataService";
+import { getSteps, getOneTrail, createStep } from "~/utils/dataService";
 
-import Modal from "~/components/modal";
-import { useLoaderData } from "@remix-run/react";
+import Modal from "~/components/Modal";
+import { redirect, useLoaderData, useParams } from "@remix-run/react";
 
 export const loader: LoaderFunction = async ({ params }) => {
     const { trailId } = params
@@ -25,8 +26,30 @@ export const loader: LoaderFunction = async ({ params }) => {
     }
 }
 
+export async function action({
+    request,
+}: ActionFunctionArgs) {
+    try {
+        const body = await request.formData();
+        const step = await createStep({
+            trailId: body.get("trailId"),
+            id: body.get("id"),
+            title: body.get("title"),
+            content: body.get("content")
+        })
+
+        console.log(step)
+    } catch (error: any) {
+        console.log(error)
+    }
+
+    return null
+}
+
 export default function Steps() {
     const [isOpen, setIsOpen] = useState<boolean>(false)
+
+    const { trailId } = useParams()
 
     const { steps, trail } = useLoaderData()
 
@@ -36,10 +59,6 @@ export default function Steps() {
 
     const closeModal = () => {
         setIsOpen(false);
-
-        // Reset input fields when modal is closed
-        setTitle('');
-        setContent('');
     };
 
     return (
@@ -54,18 +73,20 @@ export default function Steps() {
                         </div>
                     </div>
 
-                    {steps.length > 0 && steps.map((step: any) => (
-                        <div key={step.id} className="flex flex-col gap-3 bg-white mt-12 rounded-md border-2 border-slate-200">
-                            <div className="p-6">
-                                <p className="text-xl font-bold mb-2">{step.title}</p>
+                    <div className="flex flex-col gap-6 mt-12">
+                        {steps.length > 0 && steps.map((step: any) => (
+                            <div key={step.id} className=" bg-white  rounded-md border-2 border-slate-200">
+                                <div className="p-6">
+                                    <p className="text-xl font-bold mb-2">{step.title}</p>
 
-                                <p className="text-lg text-slate-600 font-semibold">{step.content}</p>
+                                    <p className="text-lg text-slate-600 font-semibold">{step.content}</p>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
+                    </div>
                 </div>
             </div>
-            <Modal isOpen={isOpen} closeModal={closeModal} />
+            <Modal isOpen={isOpen} closeModal={closeModal} trailId={trailId} />
         </>
     );
 }

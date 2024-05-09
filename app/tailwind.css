@@ -30,13 +30,16 @@
     }
 
     .input-focus {
-        @apply border-2 border-gray-100 rounded-md;
+        @apply border-2 border-gray-100 rounded-lg;
     }
 }
 
 .input-focus:focus-visible {
-    border-color: rgb(156 163 175);
-    outline: none;
+    border-color: #7357FF;
+    border-width: 0.05rem;;
+    outline-color: #7e64ff7e;
+    outline-width: 1.25rem;
+    outline-offset: 0.15rem;
 }
 
 @layer base {
