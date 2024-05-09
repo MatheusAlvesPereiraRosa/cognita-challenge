@@ -1,17 +1,14 @@
-import React, { useState } from 'react';
-import { Step } from '~/interfaces';
-import { createStep } from "~/utils/dataService";
-import { ActionFunctionArgs } from '@remix-run/node';
-import { redirect } from '@remix-run/react';
-
 interface Props {
     isOpen: boolean;
     closeModal: () => void;
     trailId: string | undefined;
+    idError?: string
+    titleError?: string
+    contentError?: string
 }
 
-const Modal = ({ isOpen, closeModal, trailId }: Props) => {
-     return (
+const Modal = ({ isOpen, closeModal, trailId, idError, titleError, contentError }: Props) => {
+    return (
         <>
             {/* Modal */}
             {isOpen && (
@@ -33,6 +30,9 @@ const Modal = ({ isOpen, closeModal, trailId }: Props) => {
                                         className="mt-1 bg-slate-50 p-2 block font-bold w-full input-focus shadow-sm sm:text-sm"
                                         name='id'
                                     />
+                                    {
+                                        idError && <span className="mt-6 text-slate-400">{idError}</span>
+                                    }
                                 </div>
                                 <div className="mb-4">
                                     <label className="block text-md font-medium text-gray-700">Título</label>
@@ -40,8 +40,11 @@ const Modal = ({ isOpen, closeModal, trailId }: Props) => {
                                         type="text"
                                         className="mt-1 bg-slate-50 p-2 block font-bold w-full shadow-sm sm:text-sm input-focus border-2 border-gray-100 rounded-md"
                                         name='title'
-                                        
+
                                     />
+                                    {
+                                        titleError && <span className="mt-6 text-slate-400">{titleError}</span>
+                                    }
                                 </div>
                                 <div className="mb-4">
                                     <label className="block text-md font-medium text-gray-700">Conteúdo</label>
@@ -49,8 +52,11 @@ const Modal = ({ isOpen, closeModal, trailId }: Props) => {
                                         className="mt-1 bg-slate-50 p-2 block font-bold w-full shadow-sm sm:text-sm input-focus border-2 border-gray-100 rounded-md"
                                         rows={3}
                                         name='content'
-                                        
+
                                     ></textarea>
+                                    {
+                                        contentError && <span className="mt-6 text-slate-400">{contentError}</span>
+                                    }
                                 </div>
 
                                 <input type="hidden" name="trailId" value={trailId} />

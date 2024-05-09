@@ -1,3 +1,9 @@
+interface Trail {
+    id: string;
+    title: string;
+    content: string;
+}
+
 interface Step {
     id: string;
     title: string;
@@ -11,4 +17,4 @@ interface StepForm {
     trailId: string;
 }
 
-export type { Step, StepForm }
+export type { Trail, Step, StepForm }

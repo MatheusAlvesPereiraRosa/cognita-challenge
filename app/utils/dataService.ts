@@ -27,7 +27,7 @@ export async function getOneTrail(trailId: string) {
         );
 
         if (result.records.length === 0) {
-            return redirect("/") //Fazer tratamento de
+            return redirect("/")
         }
 
         const trail = result.records[0].get('t').properties;
