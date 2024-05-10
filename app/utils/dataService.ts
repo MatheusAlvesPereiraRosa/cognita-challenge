@@ -26,12 +26,11 @@ export async function getOneTrail(trailId: string) {
             { trailId }
         );
 
-        if (result.records.length === 0) {
-            return redirect("/")
-        }
-
         const trail = result.records[0].get('t').properties;
         return trail;
+    } catch(error) {
+        console.log(error)
+        throw redirect("/")
     } finally {
         await session.close();
     }
@@ -47,14 +46,10 @@ export async function getSteps(trailId: string): Promise<Step[]| void> {
             { trailId }
         );
 
-        //console.log(result)
-
         const steps = result.records.map((record) => {
             const step = record.get("b");
             return step.properties;
         });
-
-        //console.log(steps)
 
         return steps;
     } catch (error) {

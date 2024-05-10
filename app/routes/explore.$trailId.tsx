@@ -18,23 +18,18 @@ export const loader: LoaderFunction = async ({ params }) => {
     const { trailId } = params
 
     if (!trailId || trailId === "") {
-        return redirect("/");
+        throw redirect("/");
     }
 
     try {
-
         const trail = await getOneTrail(trailId)
 
         const steps = await getSteps(trailId)
 
-        if (trail === null || !trail || trail.length === 0) {
-            return redirect("/")
-        }
-
         return json({ steps, trail });
     } catch (error: any) {
         console.error('Error retrieving steps from database:', error.message);
-        return json({ error: 'An error occurred while retrieving steps from the database.' }, 500);
+        throw redirect("/")
     }
 }
 
@@ -88,8 +83,6 @@ export default function Steps() {
 
     /* Request treatment variables and data */
     const actionData = useActionData<ActionData>()
-
-    console.log(actionData)
 
     const idError = actionData?.errors?.id
     const titleError = actionData?.errors?.title
