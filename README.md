@@ -15,7 +15,7 @@ Depois crie um projeto na interface do neo4j e utilize a database neo4j padrão,
 Após isso, digite ou cole o comando cypher para criar os nós iniciais no banco de dados:
 
 ```
-    CREATE (s:Step { 
+  CREATE (s:Step { 
 	id: 'step-1', 
 	title: 'O primeiro passo', 
 	content: 'O conteúdo do primeiro passo' 
